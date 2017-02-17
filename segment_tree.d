@@ -1,53 +1,55 @@
-import std.stdio;
-import std.array;
-import std.string;
-import std.conv;
-import std.algorithm;
-import std.typecons;
-import std.range;
-import std.random;
-import std.math;
-import std.container;
-
+import core.bitop;
 
 class SegmentTree {
     int[] table;
-    int N, table_size;
+    int size;
 
     this(int n) {
-        N = n;
-        table_size = 1;
-        while (table_size < n) table_size *= 2;
-        table_size *= 2;
-        table = new int[](table_size);
+        assert(bsr(n) < 29);
+        size = 1 << (bsr(n) + 2);
+        table = new int[](size);
     }
 
     void add(int pos, int num) {
-        add_rec(0, 0, table_size/2-1, pos, num);
+        return add(pos, num, 0, 0, size/2-1);
     }
 
-    void add_rec(int i, int left, int right, int pos, int num) {
+    void add(int pos, int num, int i, int left, int right) {
         table[i] += num;
         if (left == right)
             return;
         auto mid = (left + right) / 2;
         if (pos <= mid)
-            add_rec(i*2+1, left, mid, pos, num);
+            add(pos, num, i*2+1, left, mid);
         else
-            add_rec(i*2+2, mid+1, right, pos, num);
+            add(pos, num, i*2+2, mid+1, right);
     }
 
     int sum(int pl, int pr) {
-        return sum_rec(0, pl, pr, 0, table_size/2-1);
+        return sum(pl, pr, 0, 0, size/2-1);
     }
 
-    int sum_rec(int i, int pl, int pr, int left, int right) {
+    int sum(int pl, int pr, int i, int left, int right) {
         if (pl > right || pr < left)
             return 0;
         else if (pl <= left && right <= pr)
             return table[i];
         else
-            return sum_rec(i*2+1, pl, pr, left, (left+right)/2) +
-                sum_rec(i*2+2, pl, pr, (left+right)/2+1, right);
+            return
+                sum(pl, pr, i*2+1, left, (left+right)/2) +
+                sum(pl, pr, i*2+2, (left+right)/2+1, right);
     }
+}
+
+unittest {
+    auto st = new SegmentTree(100);
+    st.add(5, 2);
+    assert(st.sum(0, 4) == 0);
+    assert(st.sum(0, 10) == 2);
+    assert(st.sum(5, 5) == 2);
+    assert(st.sum(6, 99) == 0);
+    st.add(99, 100);
+    assert(st.sum(0, 99) == 102);
+    assert(st.sum(5, 99) == 102);
+    assert(st.sum(98, 99) == 100);
 }
