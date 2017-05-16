@@ -19,7 +19,7 @@ class UnionFind {
         x = find(x);
         y = find(y);
         if (x == y) return;
-        if (table[x] < table[y]) swap(x, y);
+        if (table[x] > table[y]) swap(x, y);
         table[x] += table[y];
         table[y] = x;
     }
