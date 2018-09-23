@@ -1,3 +1,5 @@
+// verified: AOJ GRL_3_B http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=GRL_3_B
+
 import std.typecons, std.conv, std.array, std.algorithm;
 
 class UndirectedGraph {
@@ -18,12 +20,13 @@ class UndirectedGraph {
 class BridgeBlockTree : UndirectedGraph { // 二重辺連結成分分解 (橋で分解したあとの木)
     int[] index;
     int[][] block;
+    Tuple!(int, int)[] bridges;
 
     this (UndirectedGraph g) {
         int n = 0;
         int cnt = 0;
 
-        auto bridges = detect_bridges(g);
+        bridges = detect_bridges(g);
         auto is_bridge = new bool[int][](g.N);
         foreach (b; bridges) {
             is_bridge[b[0]][b[1]] = true;
@@ -63,21 +66,19 @@ class BridgeBlockTree : UndirectedGraph { // 二重辺連結成分分解 (橋で
 
     Tuple!(int, int)[] detect_bridges(UndirectedGraph g) {
         Tuple!(int, int)[] bridges;
-        int ord = 0;
-        auto pre = new int[](g.N);
+        int cnt = 0;
+        auto ord = new int[](g.N);
         auto low = new int[](g.N);
-        fill(pre, -1);
+        fill(ord, -1);
         fill(low, -1);
 
         void dfs(int n, int p) {
-            pre[n] = low[n] = ord++;
+            ord[n] = low[n] = cnt++;
             foreach (m; g.adj[n]) {
                 if (m == p) continue;
-                if (pre[m] == -1) dfs(m, n);
+                if (ord[m] == -1) dfs(m, n);
                 low[n] = min(low[n], low[m]);
-            }
-            if (low[n] == pre[n] && p != -1) {
-                bridges ~= tuple(min(n, p), max(n, p));
+                if (ord[n] < low[m]) bridges ~= tuple(n, m);
             }
         }
 
