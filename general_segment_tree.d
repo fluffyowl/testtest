@@ -14,13 +14,18 @@ class SegmentTree(T, alias op, T e) {
         offset = size / 2;
     }
 
-    void update(alias op_update)(int pos, T val) {
-        /*
-          substitute: (a, b) => b
-          add:        (a, b) => a+b
-         */
+    void assign(int pos, T val) {
         pos += offset;
-        table[pos] = op_update(table[pos], val);
+        table[pos] = val;
+        while (pos > 1) {
+            pos /= 2;
+            table[pos] = op(table[pos*2], table[pos*2+1]);
+        }
+    }
+
+    void add(int pos, T val) {
+        pos += offset;
+        table[pos] += val;
         while (pos > 1) {
             pos /= 2;
             table[pos] = op(table[pos*2], table[pos*2+1]);
