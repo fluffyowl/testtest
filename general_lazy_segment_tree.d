@@ -8,9 +8,9 @@
   opTT: 2つの区間の結果をマージする関数 (T, T) -> T
   opTL: クエリを適用する（作用させる）関数 (T, L) -> T
   opLL: 2つのクエリをまとめる関数 (L, L) -> L
-  opPrd: (T, int) -> 区間の長さに応じて結果を変化させる関数. 区間和とかに使う (T, int) -> T
-  eL: Lの単位元
+  opPrd: (L, int) -> 区間の長さに応じて結果を変化させる関数. 区間和とかに使う (L, int) -> T
   eT: Tの単位元
+  eL: Lの単位元
  */
 
 /*
@@ -46,7 +46,7 @@ class LazySegmentTree(T, L, alias opTT, alias opTL, alias opLL, alias opPrd, T e
         while (size <= n) size <<= 1;
         size <<= 1;
         table = new T[](size);
-        lazy_ = new T[](size);
+        lazy_ = new L[](size);
         table[] = eT;
         lazy_[] = eL;
     }
