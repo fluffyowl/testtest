@@ -1,7 +1,7 @@
 // verified: AtCoder Regular Contest 062 F (https://beta.atcoder.jp/contests/arc062/tasks/arc062_d)
 
 
-import std.typecons, std.array, std.algorithm, std.stdio;
+import std.typecons, std.array, std.algorithm, std.stdio, std.container;
 
 unittest {
     int n = 11;
@@ -55,7 +55,7 @@ Tuple!(int, int)[][] biconnected_decomposition(UndirectedGraph g) {
     Tuple!(int, int)[][] ret;
 
     int cnt = 0;
-    Tuple!(int, int)[] stack;
+    DList!(Tuple!(int, int)) stack;
     auto ord = new int[](g.N);
     auto low = new int[](g.N);
     fill(ord, -1);
@@ -67,19 +67,19 @@ Tuple!(int, int)[][] biconnected_decomposition(UndirectedGraph g) {
         cnt += 1;
         foreach (m; g.adj[n]) {
             if (ord[m] == -1) {
-                stack ~= tuple(n, m);
+                stack.insertBack(tuple(n, m));
                 dfs(m, n);
                 low[n] = min(low[n], low[m]);
                 if (low[m] >= ord[n]) {
                     Tuple!(int, int)[] bicom;
                     while (bicom.empty || bicom.back != tuple(n, m)) {
                         bicom ~= stack.back;
-                        stack.popBack;
+                        stack.removeBack;
                     }
                     ret ~= bicom.dup;
                 }
             } else if (ord[m] < ord[n] && m != p) {
-                stack ~= tuple(n, m);
+                stack.insertBack(tuple(n, m));
                 low[n] = min(low[n], ord[m]);
             }
         }
