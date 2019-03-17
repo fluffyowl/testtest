@@ -32,6 +32,7 @@ matrix:
         - dmd --version
         - red-baron test
 
+
 before_install:
   - pyenv versions
   - pyenv global ${PYTHON_VERSION}
