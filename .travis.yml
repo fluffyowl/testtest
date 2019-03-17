@@ -25,7 +25,7 @@ cache:
   - directories:
     - ${HOME}/.red_baron
 
-sudo: required
+sudo: yes
 
 notifications:
   email: false
