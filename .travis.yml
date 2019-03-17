@@ -21,7 +21,6 @@ matrix:
       script:
         - doxygen --version
         - python --version
-        - ./build.sh
         - git diff --exit-code
 
     - language: d
