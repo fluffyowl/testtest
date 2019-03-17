@@ -7,13 +7,14 @@ matrix:
       d: "dmd-2.081.2"
       env:
         - ENV="DMD 2.081"
-        - PYTHON_VERSION="3.6"
+        - PYTHON_VERSION="3.7"
       script:
         - dmd --version
         - red-baron test
 
 before_install:
   - pyenv versions
+  - pyenv install ${PYTHON_VERSION}
   - pyenv global ${PYTHON_VERSION}
   - pip install --upgrade pip
   - pip install git+https://github.com/asi1024/red-baron.git
