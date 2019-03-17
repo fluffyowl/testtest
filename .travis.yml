@@ -7,7 +7,7 @@ matrix:
       d: "dmd-2.081.2"
       env:
         - ENV="DMD 2.081"
-        - PYTHON_VERSION="3.7"
+        - PYTHON_VERSION="3.6"
       script:
         - dmd --version
         - red-baron test
